@@ -217,7 +217,7 @@ const THEMES = {
   meo:{emoji:'🐱', title:'Lùa Mèo Vô Thùng', noun:'mèo', place:'Chuồng', release:'Thả mèo ra', char:'cat', colors:['#d9822b','#7a5cc7'], music:{src:'xoso.mp3', start:7.75, vol:.48}},
   ga:{emoji:'🐔', title:'Lùa Gà Vô Lồng', noun:'gà', place:'Chuồng', release:'Thả gà ra', char:'chicken', colors:['#d9542b','#2f8f5b'], music:{src:'xoso.mp3', start:7.75, vol:.48}},
   thuyen:{emoji:'⛵', title:'Lùa Khách Lên Thuyền', noun:'khách', place:'Chuồng', release:'Cho khách xuống', yard:'bến', char:'person', colors:['#e2533a','#2f7fb0'], music:{src:'xoso.mp3', start:7.75, vol:.48}},
-  namtay:{emoji:'💞', title:'Sao Mình Chưa Nắm Tay Nhau', noun:'heo', place:'Chuồng', release:'Thả heo ra', char:'pig', deco:'winter', colors:['#e0567a','#5b6fd6'], music:{src:'namtay.mp3', start:73.5, vol:.16}},
+  namtay:{emoji:'💞', title:'JK', noun:'heo', place:'Chuồng', release:'Thả heo ra', char:'pig', deco:'winter', colors:['#e0567a','#5b6fd6'], music:{src:'jk.mp3', start:6.1, vol:.31}},
   noel:{emoji:'🎄', title:'Noel Lùa Heo', noun:'heo', place:'Chuồng', release:'Thả heo ra', char:'pig', deco:'santa', colors:['#c8242f','#1f7a4a'], music:{src:'noel.mp3', start:.6, vol:.55}},
   tet:{emoji:'🧧', title:'Tết Lùa Heo', noun:'heo', place:'Chuồng', release:'Thả heo ra', char:'pig', deco:'tet', colors:['#d4202c','#d99a06'], music:{src:'tet.mp3', start:0, vol:.16}},
 };
@@ -905,6 +905,7 @@ document.querySelectorAll('.tab').forEach(t => t.onclick = () => {
 
 function pickThemeFromUrl(){
   const q = (new URLSearchParams(location.search).get('t') || location.hash.slice(1) || '').toLowerCase();
+  if (q === 'jk') return 'namtay';
   if (THEMES[q] && THEME_ORDER.includes(q)) return q;
   try{ const s = localStorage.getItem('pigpen.theme'); if (THEMES[s] && THEME_ORDER.includes(s)) return s; }catch(e){}
   return 'heo';
@@ -913,14 +914,14 @@ function setTheme(id, push=true){
   if (busy || !THEMES[id] || !THEME_ORDER.includes(id)) return;
   themeId = id;
   try{ localStorage.setItem('pigpen.theme', id); }catch(e){}
-  if (push) history.replaceState(null, '', id === 'heo' ? location.pathname : `?t=${id}`);
+  if (push) history.replaceState(null, '', id === 'heo' ? location.pathname : `?t=${id === 'namtay' ? 'jk' : id}`);
   pigs.forEach(p => { p.pen = null; p.fancy = null; });
   results = [];
   $('stage').classList.remove('spring'); drawScene(); setMusic();
   pigs.forEach(p => { if (p.el){ p.el.remove(); p.el = null; } });
   layout(false); save();
 }
-$('themes').innerHTML = THEME_ORDER.map(id => `<button data-t="${id}">${THEMES[id].emoji} ${({heo:'Heo',meo:'Mèo',ga:'Gà',thuyen:'Thuyền',namtay:'Nắm tay',noel:'Noel',tet:'Tết'})[id]}</button>`).join('');
+$('themes').innerHTML = THEME_ORDER.map(id => `<button data-t="${id}">${THEMES[id].emoji} ${({heo:'Heo',meo:'Mèo',ga:'Gà',thuyen:'Thuyền',namtay:'JK',noel:'Noel',tet:'Tết'})[id]}</button>`).join('');
 $('themes').querySelectorAll('button').forEach(b => b.onclick = () => setTheme(b.dataset.t));
 themeId = pickThemeFromUrl();
 drawScene(); setMusic(); load(); syncToText(); layout(false);
