@@ -98,7 +98,7 @@ body.t-noel{--bg:#e8f0f7;--accent:#c8242f;--panel:#fbfdff}
 body.t-tet{--bg:#fbeee0;--accent:#d4202c;--panel:#fff8ef}
 body.t-meo{--bg:#f3ece6;--accent:#e2733a}
 body.t-ga{--bg:#f6f0dc;--accent:#d9542b}
-body.t-banhbao{--bg:#f5f1ea;--accent:#c4552f}
+body.t-thuyen{--bg:#e6f1f6;--accent:#e2533a}
 /* ---------- Panel ---------- */
 .panel{background:var(--panel);border:1px solid var(--line);border-radius:18px;display:flex;flex-direction:column;min-height:520px;overflow:hidden}
 .tabs{display:flex;border-bottom:1px solid var(--line)}
@@ -214,11 +214,11 @@ const THEMES = {
   heo:{emoji:'🐷', title:'Lùa Heo Vô Chuồng', noun:'heo', place:'Chuồng', release:'Thả heo ra', char:'pig', colors:['#e07a3f','#3f8fe0'], music:{src:'xoso.mp3', start:7.75, vol:.48}},
   meo:{emoji:'🐱', title:'Lùa Mèo Vô Thùng', noun:'mèo', place:'Thùng', release:'Thả mèo ra', char:'cat', colors:['#d9822b','#7a5cc7'], music:{src:'xoso.mp3', start:7.75, vol:.48}},
   ga:{emoji:'🐔', title:'Lùa Gà Vô Lồng', noun:'gà', place:'Lồng', release:'Thả gà ra', char:'chicken', colors:['#d9542b','#2f8f5b'], music:{src:'xoso.mp3', start:7.75, vol:.48}},
-  banhbao:{emoji:'🥟', title:'Bỏ Bánh Bao Vô Xửng', noun:'bánh bao', place:'Xửng', release:'Lấy bánh ra', char:'bun', colors:['#c4552f','#2f7fb0'], music:{src:'xoso.mp3', start:7.75, vol:.48}},
+  thuyen:{emoji:'⛵', title:'Lùa Khách Lên Thuyền', noun:'khách', place:'Thuyền', release:'Cho khách xuống', yard:'bến', char:'person', colors:['#e2533a','#2f7fb0'], music:{src:'xoso.mp3', start:7.75, vol:.48}},
   noel:{emoji:'🎄', title:'Noel Lùa Heo', noun:'heo', place:'Nhà', release:'Thả heo ra', char:'pig', deco:'santa', colors:['#c8242f','#1f7a4a'], music:{src:'noel.mp3', start:.6, vol:.55}},
   tet:{emoji:'🧧', title:'Tết Lùa Heo', noun:'heo', place:'Chuồng', release:'Thả heo ra', char:'pig', deco:'tet', colors:['#d4202c','#d99a06'], music:{src:'tet.mp3', start:0, vol:.16}},
 };
-const THEME_ORDER = ['heo','meo','ga','banhbao','noel','tet'];
+const THEME_ORDER = ['heo','meo','ga','thuyen','noel','tet'];
 let themeId = 'heo';
 const T = () => THEMES[themeId];
 
@@ -242,10 +242,15 @@ function groundSVG(){
     <rect width="1000" height="640" fill="url(#dirt)"/>
     ${[[470,140],[530,200],[490,260]].map(([x,y])=>`<g transform="translate(${x} ${y})"><ellipse rx="34" ry="16" fill="#e8c35a"/><path d="M-30 0 l60 -6 M-26 6 l54 -2 M-20 -8 l44 4" stroke="#c99a2e" stroke-width="2"/></g>`).join('')}
     <path d="M260 340 C 260 380, 500 370, 500 420 M740 340 C 740 380, 500 370, 500 420" stroke="#c49a52" stroke-width="34" fill="none" stroke-linecap="round" opacity=".6"/>`;
-  if (id === 'banhbao') return `<defs><pattern id="tiles" width="64" height="64" patternUnits="userSpaceOnUse"><rect width="64" height="64" fill="#eef3f2"/><rect width="32" height="32" fill="#d9e6e4"/><rect x="32" y="32" width="32" height="32" fill="#d9e6e4"/></pattern></defs>
-    <rect width="1000" height="640" fill="url(#tiles)"/>
-    <rect x="0" y="395" width="1000" height="245" fill="#b98656"/><rect x="0" y="395" width="1000" height="12" fill="#8f6238"/>
-`;
+  if (id === 'thuyen') return `<defs><linearGradient id="sea" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#4fb3d9"/><stop offset="1" stop-color="#2a86b8"/></linearGradient>
+    <pattern id="wave" width="80" height="36" patternUnits="userSpaceOnUse"><path d="M6 20 q10 -8 20 0 q10 8 20 0" stroke="#bfe8f7" stroke-width="2.5" fill="none" stroke-linecap="round" opacity=".55"/></pattern>
+    <pattern id="dock" width="1000" height="34" patternUnits="userSpaceOnUse"><rect width="1000" height="34" fill="#c08a52"/><rect y="31" width="1000" height="3" fill="#94642f"/><path d="M140 0 v31 M430 0 v31 M720 0 v31" stroke="#94642f" stroke-width="3"/></pattern></defs>
+    <rect width="1000" height="640" fill="url(#sea)"/><rect width="1000" height="400" fill="url(#wave)"/>
+    <rect x="0" y="398" width="1000" height="242" fill="url(#dock)"/><rect x="0" y="392" width="1000" height="10" fill="#7a4f22"/>
+    ${[60,250,500,750,940].map(x=>`<rect x="${x-9}" y="384" width="18" height="26" rx="4" fill="#6b4220"/><ellipse cx="${x}" cy="384" rx="9" ry="4" fill="#8a5a2e"/>`).join('')}
+    <g transform="translate(500 120)"><circle r="40" fill="#ffd84a" opacity=".9"/></g>
+    <path d="M440 260 q14 -10 28 0 q14 10 28 0 M520 300 q14 -10 28 0" stroke="#e9f8ff" stroke-width="3" fill="none" stroke-linecap="round" opacity=".7"/>
+    <g transform="translate(470 200)"><path d="M0 0 q10 -8 20 0 q10 -8 20 0" stroke="#fff" stroke-width="3" fill="none" stroke-linecap="round"/></g>`;
   return `<defs><linearGradient id="gnd" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#a8d873"/><stop offset="1" stop-color="#7cb34c"/></linearGradient>
     <pattern id="tuft" width="60" height="40" patternUnits="userSpaceOnUse"><path d="M10 30 l3 -8 l3 8 M40 14 l2 -6 l3 6" stroke="#6aa13d" stroke-width="2" fill="none" stroke-linecap="round"/></pattern></defs>
     <rect width="1000" height="640" fill="url(#gnd)"/><rect width="1000" height="640" fill="url(#tuft)"/>
@@ -317,14 +322,19 @@ function penSVG(p, k){
     for (let x = L+26; x < R; x += 30) s += `<line x1="${x}" y1="${Tp-4}" x2="${x}" y2="${Tp+26}" stroke="#a8792f" stroke-width="6" stroke-linecap="round"/>`;
     for (let y = Tp+30; y < B; y += 30){ s += `<line x1="${L-4}" y1="${y}" x2="${L+18}" y2="${y}" stroke="#a8792f" stroke-width="6" stroke-linecap="round"/><line x1="${R+4}" y1="${y}" x2="${R-18}" y2="${y}" stroke="#a8792f" stroke-width="6" stroke-linecap="round"/>`; }
     s += `<path d="M${L+40} ${Tp} Q${(L+R)/2} ${Tp-70} ${R-40} ${Tp}" stroke="#a8792f" stroke-width="10" fill="none"/>`;
-  } else if (id === 'banhbao'){
-    s += `<rect x="${L-10}" y="${Tp-10}" width="${p.w+20}" height="${p.h+20}" rx="70" fill="#a8763d"/>`;
-    s += `<rect x="${L+12}" y="${Tp+12}" width="${p.w-24}" height="${p.h-24}" rx="54" fill="#e8c88f"/>`;
-    s += `<rect x="${L-10}" y="${Tp-10}" width="${p.w+20}" height="${p.h+20}" rx="70" fill="none" stroke="#7c5426" stroke-width="5" stroke-dasharray="18 8"/>`;
-    let g=''; for (let x = L+40; x < R-30; x += 26) g += `M${x} ${Tp+20} V${B-20} `; for (let y = Tp+40; y < B-20; y += 26) g += `M${L+20} ${y} H${R-20} `;
-    s += `<path d="${g}" stroke="#d1ad6e" stroke-width="2.5"/>`;
-    s += `<rect x="${w.gl-4}" y="${B-14}" width="${GATE_W+8}" height="28" fill="#e8c88f"/>`;
-    s += `<ellipse cx="${R-90}" cy="${Tp+60}" rx="30" ry="18" fill="#7fb85a" opacity=".85"/><ellipse cx="${R-70}" cy="${Tp+80}" rx="24" ry="14" fill="#6aa248" opacity=".85"/>`;
+  } else if (id === 'thuyen'){
+    const cx = (L+R)/2;
+    s += `<ellipse cx="${cx}" cy="${B+6}" rx="${p.w/2+30}" ry="22" fill="#1f6f9c" opacity=".45"/>`;
+    s += `<path d="M${cx} ${Tp-70} Q${R+14} ${Tp-10} ${R+14} ${Tp+70} L${R+8} ${B+4} Q${cx} ${B+22} ${L-8} ${B+4} L${L-14} ${Tp+70} Q${L-14} ${Tp-10} ${cx} ${Tp-70}Z" fill="#7a4a24" stroke="#4e2c10" stroke-width="5" stroke-linejoin="round"/>`;
+    s += `<path d="M${cx} ${Tp-50} Q${R-2} ${Tp-4} ${R-2} ${Tp+70} L${R-6} ${B-6} Q${cx} ${B+6} ${L+6} ${B-6} L${L+2} ${Tp+70} Q${L+2} ${Tp-4} ${cx} ${Tp-50}Z" fill="#e2b77c"/>`;
+    let pl=''; for (let x = L+34; x < R-10; x += 34) pl += `M${x} ${Tp-10} V${B-4} `;
+    s += `<path d="${pl}" stroke="#c4935a" stroke-width="2.5" opacity=".8"/>`;
+    s += `<path d="M${L-8} ${B-2} Q${cx} ${B+16} ${R+8} ${B-2}" stroke="${p.color}" stroke-width="9" fill="none"/>`;
+    s += `<g transform="translate(${cx} ${Tp-30})"><path d="M0 0 v-60" stroke="#4e2c10" stroke-width="6"/><path d="M3 -60 l46 12 l-46 12Z" fill="${p.color}" stroke="#4e2c10" stroke-width="2"/></g>`;
+    s += `${[[L+40,Tp+40],[R-40,Tp+40]].map(([x,y])=>`<g transform="translate(${x} ${y})"><circle r="15" fill="none" stroke="#fff" stroke-width="9"/><circle r="15" fill="none" stroke="${p.color}" stroke-width="9" stroke-dasharray="11.8 11.8"/></g>`).join('')}`;
+    s += `<rect x="${w.gl+6}" y="${B-12}" width="${GATE_W-12}" height="64" fill="#a8713c" stroke="#5e3a1a" stroke-width="3"/>`;
+    for (let y = B-4; y < B+50; y += 12) s += `<path d="M${w.gl+6} ${y} h${GATE_W-12}" stroke="#5e3a1a" stroke-width="2"/>`;
+    s += `<path d="M${cx-30} ${B+40} q10 -6 20 0 M${cx+60} ${B+20} q10 -6 20 0" stroke="#fff" stroke-width="3" fill="none" opacity=".0"/>`;
   } else {
     const noel = id === 'noel', tet = id === 'tet';
     s += `<rect x="${L}" y="${Tp}" width="${p.w}" height="${p.h}" rx="6" fill="${noel ? '#eef4fa' : tet ? '#f6d77a' : '#b88d5e'}"/>`;
@@ -355,14 +365,13 @@ function drawScene(){
     e.style.setProperty('--dx', (rnd(80)-40)/10 + 'cqw'); e.style.setProperty('--rot', (rnd(720)-360) + 'deg'); fx.appendChild(e); } };
   if (themeId === 'noel') make(['❄','•','❅','•'], 46);
   if (themeId === 'tet') make(['🌼','✿','🧧','🌸'], 26);
-  if (themeId === 'banhbao'){ make(['☁︎'], 14, 'steam'); fx.querySelectorAll('i').forEach((e,i) => { e.style.left = (PENS[i%2].gate/10 - 15 + rnd(30)) + '%'; e.style.bottom = (40 + rnd(10)) + '%'; e.style.color = '#fff'; e.style.fontSize = (3 + rnd(30)/10) + 'cqw'; }); }
   document.body.className = 't-' + themeId;
   $('title').textContent = `${T().emoji} ${T().title}`;
   document.title = `${T().title} — Random tên`;
   $('resetPens2').textContent = '↺ ' + T().release;
   $('listLbl').textContent = 'Danh sách ' + T().noun;
   $('rule').textContent = `Mỗi dòng = 1 ${T().noun}. Mỗi ${T().place.toLowerCase()} tối đa một nửa. Khi 1 ${T().place.toLowerCase()} đủ, số còn lại tự vô ${T().place.toLowerCase()} kia.`;
-  $('empty').textContent = `Điền tên bên phải để thả ${T().noun} ra sân ${T().emoji}`;
+  $('empty').textContent = `Điền tên bên phải để thả ${T().noun} ra ${T().yard || 'sân'} ${T().emoji}`;
   $('c1').style.background = PENS[0].color; $('c2').style.background = PENS[1].color;
   $('themes').querySelectorAll('button').forEach(b => b.setAttribute('aria-pressed', b.dataset.t === themeId));
 }
@@ -487,6 +496,18 @@ function charBody(ch, C, o, fill, headFill, g, fancy, hat){
   ${hat || ''}
   <path d="M96 34 L108 39 L96 43Z" fill="#f2a516" stroke="${o}" stroke-width="2" stroke-linejoin="round"/>
   <path d="M95 44 q4 8 -2 10 q-4 -4 2 -10Z" fill="#e5242f" stroke="${o}" stroke-width="1.6"/>`;
+  if (ch === 'person') return `
+  <rect x="18" y="40" width="38" height="36" rx="6" fill="${C.d}" stroke="${o}" stroke-width="2.5"/>
+  <path d="M30 40 v-8 h14 v8" stroke="${o}" stroke-width="3" fill="none" stroke-linejoin="round"/>
+  <rect x="18" y="52" width="38" height="5" fill="${C.b}" opacity=".7"/><circle cx="26" cy="78" r="3.5" fill="#333"/><circle cx="48" cy="78" r="3.5" fill="#333"/>
+  <rect x="26" y="60" width="10" height="9" rx="2" fill="#fff" opacity=".85" transform="rotate(-10 31 64)"/>
+  <rect x="68" y="62" width="9" height="18" rx="3" fill="#3a4a6b" stroke="${o}" stroke-width="2"/><rect x="83" y="62" width="9" height="18" rx="3" fill="#3a4a6b" stroke="${o}" stroke-width="2"/>
+  <path d="M60 64 Q60 50 80 50 Q100 50 100 64 Z" fill="${fill}" stroke="${o}" stroke-width="2.5" stroke-linejoin="round"/>
+  <path d="M62 62 Q66 52 78 52 V64 M98 62 Q94 52 82 52 V64" stroke="${o}" stroke-width="1.5" fill="none" opacity=".5"/>
+  <path d="M61 56 Q54 60 52 50" stroke="#f1c6a0" stroke-width="6" fill="none" stroke-linecap="round"/>
+  <circle cx="80" cy="34" r="18" fill="#f6cfa8" stroke="${o}" stroke-width="2.5"/>
+  ${hat ? '' : `<path d="M62 32 Q62 12 80 13 Q99 12 98 30 Q90 22 80 24 Q70 22 62 32Z" fill="#2b2118"/>`}
+  ${hat || ''}`;
   if (ch === 'bun') return `
   <ellipse cx="62" cy="78" rx="46" ry="6" fill="#000" opacity=".12"/>
   <path d="M18 74 Q14 18 62 12 Q110 18 106 74 Q62 84 18 74Z" fill="${fill}" stroke="${o}" stroke-width="2.5" stroke-linejoin="round"/>
@@ -514,12 +535,14 @@ const TINTS = {
   pig:[['#f7b0c0','#e58aa0'],['#f9c2b0','#e79c84'],['#f4a6b8','#d97992'],['#fbc8d2','#e99fb1'],['#e9b49a','#c98a6c'],['#f6d2c2','#dba48c']],
   cat:[['#f4a24c','#c96f1e'],['#a9aeb6','#6f747c'],['#3a3436','#1b1718'],['#f3e3c8','#cdb48a'],['#e8e8e8','#9a9a9a'],['#c98a52','#8a5a2e']],
   chicken:[['#ffffff','#d9d9d9'],['#f3e6c4','#cfa860'],['#c46a2c','#8a4314'],['#ffd84a','#e0a800'],['#3a3436','#1b1718']],
+  person:[['#ff8a3d','#c2410c'],['#3fa7e0','#1d6fa5'],['#f5c542','#b88a10'],['#e5484d','#9e1f24'],['#7be36b','#3a8f2e'],['#b892ff','#6a3fc0']],
   bun:[['#fbf6ec','#e3d6bd'],['#fff9f0','#e8dcc4'],['#f7f0e2','#dccdb0'],['#fde7ec','#e8bfc8'],['#f2e9d8','#d4c19e']],
 };
 const NORMAL_EYES = {
   pig:`<circle cx="83" cy="31" r="3" fill="#2b1d14"/><circle cx="84" cy="30" r="1" fill="#fff"/><ellipse cx="76" cy="44" rx="4.5" ry="2.6" fill="#ff8fa6" opacity=".7"/>`,
   cat:`<ellipse cx="74" cy="34" rx="3" ry="4" fill="#2b1d14"/><ellipse cx="88" cy="34" rx="3" ry="4" fill="#2b1d14"/><circle cx="75" cy="33" r="1.1" fill="#fff"/><circle cx="89" cy="33" r="1.1" fill="#fff"/>`,
   chicken:`<circle cx="86" cy="30" r="3" fill="#2b1d14"/><circle cx="87" cy="29" r="1" fill="#fff"/>`,
+  person:`<circle cx="74" cy="34" r="2.4" fill="#2b1d14"/><circle cx="87" cy="34" r="2.4" fill="#2b1d14"/><path d="M75 42 q5 5 10 0" stroke="#2b1d14" stroke-width="2" fill="none" stroke-linecap="round"/><ellipse cx="70" cy="40" rx="3.5" ry="2" fill="#ff9a8a" opacity=".6"/><ellipse cx="91" cy="40" rx="3.5" ry="2" fill="#ff9a8a" opacity=".6"/>`,
   bun:`<circle cx="76" cy="42" r="2.6" fill="#2b1d14"/><circle cx="92" cy="42" r="2.6" fill="#2b1d14"/><ellipse cx="70" cy="48" rx="4" ry="2.4" fill="#ff8fa6" opacity=".7"/><ellipse cx="98" cy="48" rx="4" ry="2.4" fill="#ff8fa6" opacity=".7"/>`,
 };
 const DECO_HATS = {
@@ -858,6 +881,7 @@ document.querySelectorAll('.tab').forEach(t => t.onclick = () => {
 
 function pickThemeFromUrl(){
   const q = (new URLSearchParams(location.search).get('t') || location.hash.slice(1) || '').toLowerCase();
+  if (q === 'banhbao') return 'thuyen';
   if (THEMES[q]) return q;
   try{ const s = localStorage.getItem('pigpen.theme'); if (THEMES[s]) return s; }catch(e){}
   return 'heo';
@@ -873,7 +897,7 @@ function setTheme(id, push=true){
   pigs.forEach(p => { if (p.el){ p.el.remove(); p.el = null; } });
   layout(false); save();
 }
-$('themes').innerHTML = THEME_ORDER.map(id => `<button data-t="${id}">${THEMES[id].emoji} ${({heo:'Heo',meo:'Mèo',ga:'Gà',banhbao:'Bánh bao',noel:'Noel',tet:'Tết'})[id]}</button>`).join('');
+$('themes').innerHTML = THEME_ORDER.map(id => `<button data-t="${id}">${THEMES[id].emoji} ${({heo:'Heo',meo:'Mèo',ga:'Gà',thuyen:'Thuyền',noel:'Noel',tet:'Tết'})[id]}</button>`).join('');
 $('themes').querySelectorAll('button').forEach(b => b.onclick = () => setTheme(b.dataset.t));
 themeId = pickThemeFromUrl();
 drawScene(); setMusic(); load(); syncToText(); layout(false);
