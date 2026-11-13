@@ -511,7 +511,7 @@ const MUSIC_START = 7.75; // bỏ nhạc dạo, vào thẳng giai điệu chính
 const music = new Audio('xoso.mp3'); music.preload = 'auto';
 music.addEventListener('ended', () => { music.currentTime = MUSIC_START; music.play().catch(()=>{}); });
 let fadeT;
-function musicStart(){ if (!soundOn) return; clearInterval(fadeT); music.volume = .8; music.currentTime = MUSIC_START; music.play().catch(()=>{}); }
+function musicStart(){ if (!soundOn) return; clearInterval(fadeT); music.volume = .48; music.currentTime = MUSIC_START; music.play().catch(()=>{}); }
 function musicStop(){ clearInterval(fadeT); fadeT = setInterval(() => { music.volume = Math.max(0, music.volume - .05); if (music.volume <= 0){ clearInterval(fadeT); music.pause(); } }, 80); }
 function oink(){ tone(320,180,.16,'sawtooth',.09); setTimeout(()=>tone(300,160,.2,'sawtooth',.09),170); }
 function fanfare(){ [523,659,784,1047].forEach((f,i)=>setTimeout(()=>tone(f,f,.18,'triangle',.08), i*110)); }
