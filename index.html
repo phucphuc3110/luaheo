@@ -1,0 +1,692 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Lùa Heo Vô Chuồng — Random tên</title>
+<style>
+:root{
+  --bg:#f4efe4; --ink:#2b2118; --muted:#7a6a58; --panel:#fffaf0; --line:#e3d7c2;
+  --accent:#d94f6b; --accent-ink:#fff; --grass1:#9fd06b; --grass2:#7fb850;
+  --pen1:#e07a3f; --pen2:#3f8fe0;
+}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%}
+body{font-family:ui-rounded,"SF Pro Rounded","Nunito",system-ui,sans-serif;background:var(--bg);color:var(--ink)}
+header{display:flex;align-items:center;gap:12px;padding:12px 20px;border-bottom:1px solid var(--line);background:#fff}
+header h1{font-size:20px;margin:0;font-weight:800;letter-spacing:-.01em}
+header .sp{flex:1}
+.iconbtn{border:1px solid var(--line);background:#fff;border-radius:10px;padding:8px 12px;font:inherit;font-size:14px;cursor:pointer;color:var(--ink)}
+.iconbtn:hover{background:#f8f2e6}
+main{display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:20px;padding:20px;max-width:1400px;margin:0 auto}
+@media (max-width:900px){main{grid-template-columns:1fr}}
+
+/* ---------- Stage ---------- */
+.stagewrap{display:flex;flex-direction:column;gap:14px}
+.stage{position:relative;width:100%;aspect-ratio:1000/640;border-radius:18px;overflow:hidden;
+  box-shadow:0 1px 0 var(--line),0 12px 30px -18px rgba(60,40,10,.45);container-type:inline-size;user-select:none}
+.stage svg.bg{position:absolute;inset:0;width:100%;height:100%;display:block}
+.pig{position:absolute;transform:translate(-50%,-100%);display:flex;flex-direction:column;align-items:center;
+  transition-property:left,top;transition-timing-function:linear;cursor:default;will-change:left,top}
+.pig .art{width:100%;transform-origin:50% 100%}
+.pig .art svg{display:block;width:100%;height:auto}
+.pig.flip .art svg{transform:scaleX(-1)}
+.pig .tag{margin-top:-.2em;max-width:160%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+  background:#fff;border:2px solid #4a3527;border-radius:999px;padding:.1em .6em;font-weight:800;color:#3a2a1e;line-height:1.2}
+.pig.walking .art{animation:bob .28s ease-in-out infinite}
+@keyframes bob{0%,100%{transform:translateY(0) rotate(-3deg)}50%{transform:translateY(-8%) rotate(3deg)}}
+.pig.hot .art{animation:hop .22s ease-out}
+.pig.hot .tag{background:#ffe36e;border-color:#b5651d}
+.pig.hot{filter:drop-shadow(0 0 .6cqw #ffd84a) drop-shadow(0 0 .3cqw #fff)}
+@keyframes hop{0%{transform:translateY(0)}45%{transform:translateY(-22%)}100%{transform:translateY(0)}}
+.pig.pop .art{animation:pop .45s cubic-bezier(.2,1.6,.4,1)}
+@keyframes pop{from{transform:scale(0)}to{transform:scale(1)}}
+.pig.winner .tag{background:var(--accent);color:#fff;border-color:#7d1f33}
+
+.banner{position:absolute;left:50%;top:52.5%;transform:translate(-50%,-50%);font-weight:900;font-size:3.2cqw;color:#fff;
+  text-shadow:0 .25cqw 0 #4a3527,0 0 1cqw rgba(0,0,0,.25);pointer-events:none;white-space:nowrap;letter-spacing:.01em}
+.empty{position:absolute;left:50%;top:80%;transform:translate(-50%,-50%);color:#2f4a17;font-weight:700;font-size:2cqw;opacity:.75;pointer-events:none;text-align:center}
+
+.controls{display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+.go{background:var(--accent);color:var(--accent-ink);border:none;border-radius:14px;padding:16px 34px;font:inherit;font-size:20px;font-weight:900;
+  cursor:pointer;box-shadow:0 5px 0 #8e2a40;transition:transform .08s,box-shadow .08s}
+.go:active{transform:translateY(4px);box-shadow:0 1px 0 #8e2a40}
+.go:disabled{background:#c9b9a8;box-shadow:0 5px 0 #9c8b78;cursor:not-allowed}
+.hint{color:var(--muted);font-size:14px}
+.count{display:flex;gap:10px;margin-left:auto}
+.chip{border-radius:999px;padding:6px 12px;font-weight:800;font-size:14px;color:#fff}
+
+.reset{background:#fff;color:var(--ink);border:2px solid var(--ink);border-radius:14px;padding:14px 22px;font:inherit;font-size:18px;font-weight:900;cursor:pointer;box-shadow:0 4px 0 var(--ink)}
+.reset:active{transform:translateY(3px);box-shadow:0 1px 0 var(--ink)}
+.reset:disabled{opacity:.45;cursor:not-allowed}
+.seg{display:flex;background:#fff;border:1px solid var(--line);border-radius:12px;padding:4px;gap:4px}
+.seg button{border:none;background:none;font:inherit;font-weight:800;font-size:14px;padding:10px 14px;border-radius:9px;cursor:pointer;color:var(--muted)}
+.seg button[aria-checked=true]{background:var(--ink);color:#fff}
+.seg button:disabled{cursor:not-allowed;opacity:.6}
+.sum{display:grid;grid-template-columns:1fr 1fr;gap:10px;text-align:left;margin-top:4px}
+.sum .h{color:#fff;font-weight:900;border-radius:8px;padding:6px 10px;font-size:14px}
+.sum ul{list-style:none;margin:6px 0 0;padding:0;max-height:260px;overflow:auto}
+.sum li{padding:5px 8px;border-bottom:1px solid var(--line);font-weight:700}
+dialog{max-width:480px}
+
+.pig.vip{filter:drop-shadow(0 0 .5cqw rgba(245,197,66,.85))}
+.pig.vip .tag{background:#16131a;color:#f5c542;border-color:#f5c542}
+.pig.vip .art{width:118%}
+.pig.fancy{filter:drop-shadow(0 0 .5cqw rgba(255,255,255,.9))}
+.pig.fancy .art{width:118%}
+.pig.fancy .tag{background:linear-gradient(90deg,#ffd23f,#ff7eb6);border-color:#4a3527}
+.pig .meme{position:absolute;bottom:100%;left:50%;transform:translateX(-50%) rotate(-6deg);margin-bottom:.2em;
+  font-family:Impact,"Anton","Arial Black",sans-serif;text-transform:uppercase;color:#fff;font-size:1.25cqw;letter-spacing:.02em;white-space:nowrap;
+  -webkit-text-stroke:.12cqw #000;paint-order:stroke fill;text-shadow:0 .15cqw 0 #000;animation:memebob 1.2s ease-in-out infinite;pointer-events:none;z-index:2}
+@keyframes memebob{0%,100%{transform:translateX(-50%) rotate(-6deg) scale(1)}50%{transform:translateX(-50%) rotate(5deg) scale(1.08)}}
+.pig.fancy .art{animation:vibe .42s ease-in-out infinite}
+@keyframes vibe{0%,100%{transform:rotate(-7deg) translateY(0)}25%{transform:rotate(0) translateY(-6%) scaleX(1.06)}50%{transform:rotate(7deg) translateY(0)}75%{transform:rotate(0) translateY(-6%) scaleY(1.06)}}
+.pig.fancy.pop .art{animation:pop .45s cubic-bezier(.2,1.6,.4,1),vibe .42s .45s ease-in-out infinite}
+.dbody .pigbig{position:relative}
+@media (prefers-reduced-motion:reduce){.pig.fancy .art,.pig .meme{animation:none}}
+/* ---------- Panel ---------- */
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:18px;display:flex;flex-direction:column;min-height:520px;overflow:hidden}
+.tabs{display:flex;border-bottom:1px solid var(--line)}
+.tab{flex:1;border:none;background:none;font:inherit;font-weight:800;font-size:15px;padding:14px 10px;cursor:pointer;color:var(--muted);border-bottom:3px solid transparent}
+.tab[aria-selected=true]{color:var(--ink);border-bottom-color:var(--accent)}
+.tab .n{display:inline-block;min-width:22px;padding:1px 6px;margin-left:6px;border-radius:999px;background:#efe5d3;font-size:12px}
+.pane{display:none;flex:1;flex-direction:column;padding:14px;gap:10px}
+.pane.on{display:flex}
+.tools{display:flex;gap:8px;flex-wrap:wrap}
+.tools button{border:1px solid var(--line);background:#fff;border-radius:9px;padding:7px 11px;font:inherit;font-size:13px;font-weight:700;cursor:pointer;color:var(--ink)}
+.tools button:hover{background:#f8f2e6}
+textarea{flex:1;min-height:340px;resize:vertical;border:1px solid var(--line);border-radius:12px;padding:12px;font:inherit;font-size:16px;line-height:1.6;background:#fff;color:var(--ink)}
+textarea:focus{outline:2px solid var(--accent);outline-offset:1px}
+.small{font-size:12px;color:var(--muted)}
+ol.results{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:6px;overflow:auto;max-height:440px}
+ol.results li{display:flex;align-items:center;gap:10px;background:#fff;border:1px solid var(--line);border-radius:10px;padding:8px 10px;font-weight:700}
+ol.results li .b{margin-left:auto;font-size:12px;color:#fff;border-radius:999px;padding:3px 9px}
+ol.results li .i{color:var(--muted);font-size:12px;width:22px}
+
+/* ---------- Dialog ---------- */
+dialog{border:none;border-radius:20px;padding:0;max-width:420px;width:calc(100% - 40px);box-shadow:0 30px 60px -20px rgba(0,0,0,.45)}
+dialog::backdrop{background:rgba(30,20,10,.45)}
+.dhead{padding:16px 22px;color:#fff;font-weight:900;font-size:18px}
+.dbody{padding:22px;text-align:center}
+.dbody .pigbig{width:150px;margin:0 auto 6px}
+.dbody .nm{font-size:30px;font-weight:900;margin:4px 0;word-break:break-word}
+.dbody .where{font-size:17px;color:var(--muted);font-weight:700}
+.dfoot{display:flex;gap:10px;justify-content:flex-end;padding:0 22px 20px}
+.dfoot button{font:inherit;font-weight:800;border-radius:10px;padding:10px 16px;cursor:pointer;border:1px solid var(--line);background:#fff}
+.dfoot .primary{background:var(--accent);color:#fff;border-color:var(--accent)}
+@media (prefers-reduced-motion:reduce){.pig.walking .art,.pig.hot .art,.pig.pop .art{animation:none}}
+</style>
+</head>
+<body>
+<header>
+  <h1>🐷 Lùa Heo Vô Chuồng</h1>
+  <span class="sp"></span>
+  <button class="iconbtn" id="soundBtn" title="Bật/tắt âm thanh">🔊 Âm thanh</button>
+</header>
+
+<main>
+  <section class="stagewrap">
+    <div class="stage" id="stage">
+      <svg class="bg" viewBox="0 0 1000 640" aria-hidden="true">
+        <defs>
+          <linearGradient id="grass" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#a8d873"/><stop offset="1" stop-color="#7cb34c"/></linearGradient>
+          <linearGradient id="mud" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#c49a6c"/><stop offset="1" stop-color="#a77b4f"/></linearGradient>
+          <pattern id="tuft" width="60" height="40" patternUnits="userSpaceOnUse">
+            <path d="M10 30 l3 -8 l3 8 M40 14 l2 -6 l3 6" stroke="#6aa13d" stroke-width="2" fill="none" stroke-linecap="round"/>
+          </pattern>
+        </defs>
+        <rect width="1000" height="640" fill="url(#grass)"/>
+        <rect width="1000" height="640" fill="url(#tuft)"/>
+        <!-- path from yard to gates -->
+        <path d="M260 340 C 260 380, 500 370, 500 420 M740 340 C 740 380, 500 370, 500 420" stroke="#c9a978" stroke-width="34" fill="none" stroke-linecap="round" opacity=".55"/>
+        <g id="pens"></g>
+      </svg>
+      <div id="pigLayer"></div>
+      <div class="banner" id="banner"></div>
+      <div class="empty" id="empty">Điền tên bên phải để thả heo vào sân 🐽</div>
+    </div>
+    <div class="controls">
+      <button class="go" id="goBtn">⚖️ Chia đều</button>
+      <button class="reset" id="resetPens2">↺ Thả heo ra</button>
+      <span class="hint" id="hint">hoặc bấm Ctrl + Enter</span>
+      <div class="count">
+        <span class="chip" style="background:var(--pen1)" id="c1">Chuồng 1: 0</span>
+        <span class="chip" style="background:var(--pen2)" id="c2">Chuồng 2: 0</span>
+      </div>
+    </div>
+  </section>
+
+  <aside class="panel">
+    <div class="tabs" role="tablist">
+      <button class="tab" role="tab" aria-selected="true" data-tab="entries">Danh sách heo<span class="n" id="nEntries">0</span></button>
+      <button class="tab" role="tab" aria-selected="false" data-tab="results">Kết quả<span class="n" id="nResults">0</span></button>
+    </div>
+    <div class="pane on" id="pane-entries">
+      <div class="tools">
+        <button id="shuffleBtn">🔀 Trộn</button>
+        <button id="sortBtn">A→Z Sắp xếp</button>
+        <button id="clearBtn">🗑 Xoá hết</button>
+      </div>
+      <textarea id="entries" spellcheck="false" placeholder="Mỗi dòng một tên…"></textarea>
+      <div class="small">Mỗi dòng = 1 con heo. Mỗi chuồng tối đa một nửa số heo. Khi 1 chuồng đủ, số còn lại tự vô chuồng kia.</div>
+    </div>
+    <div class="pane" id="pane-results">
+      <div class="tools">
+        <button id="sortResBtn">A→Z Sắp xếp</button>
+        <button id="clearResBtn">🗑 Xoá kết quả</button>
+      </div>
+      <ol class="results" id="results"></ol>
+      <div class="small" id="resEmpty">Chưa có con nào vô chuồng.</div>
+    </div>
+  </aside>
+</main>
+
+<dialog id="dlg">
+  <div class="dhead" id="dHead">Chuồng 1</div>
+  <div class="dbody">
+    <div class="pigbig" id="dPig"></div>
+    <div class="nm" id="dName"></div>
+    <div class="where" id="dWhere"></div>
+    <div class="sum" id="dSum" style="display:none"></div>
+  </div>
+  <div class="dfoot">
+    <button id="dRemove">Xoá tên này</button>
+    <button class="primary" id="dClose">OK</button>
+  </div>
+</dialog>
+
+<script>
+(() => {
+// ---------- geometry (viewBox units 1000x640) ----------
+const PENS = [
+  {x:50, y:40, w:420, h:300, gate:260, color:'#e07a3f', label:'CHUỒNG 1'},
+  {x:530,y:40, w:420, h:300, gate:740, color:'#3f8fe0', label:'CHUỒNG 2'},
+];
+const GATE_W = 90;
+const YARD = {x:40, y:410, w:920, h:220};
+
+// ---------- random (crypto) ----------
+function rnd(n){ // unbiased int in [0,n)
+  const max = Math.floor(0x100000000 / n) * n, a = new Uint32Array(1);
+  do crypto.getRandomValues(a); while (a[0] >= max);
+  return a[0] % n;
+}
+
+// ---------- draw pens ----------
+function drawPens(){
+  const g = document.getElementById('pens'); let s = '';
+  for (const p of PENS){
+    const L = p.x, R = p.x + p.w, T = p.y, B = p.y + p.h, gl = p.gate - GATE_W/2, gr = p.gate + GATE_W/2;
+    s += `<rect x="${L}" y="${T}" width="${p.w}" height="${p.h}" rx="6" fill="url(#mud)"/>`;
+    s += `<ellipse cx="${L+p.w*.28}" cy="${T+p.h*.35}" rx="60" ry="22" fill="#8a6339" opacity=".55"/>`;
+    s += `<ellipse cx="${L+p.w*.72}" cy="${T+p.h*.6}" rx="42" ry="15" fill="#8a6339" opacity=".45"/>`;
+    // trough
+    s += `<rect x="${R-110}" y="${T+20}" width="80" height="22" rx="5" fill="#7a5230"/><rect x="${R-104}" y="${T+24}" width="68" height="9" rx="3" fill="#d8c27a"/>`;
+    // roof shelter
+    s += `<path d="M${L+20} ${T+60} L${L+70} ${T+18} L${L+140} ${T+18} L${L+150} ${T+60} Z" fill="${p.color}" opacity=".9"/>`;
+    // fences: rails as segments
+    const segs = [[L,T,R,T],[L,T,L,B],[R,T,R,B],[L,B,gl,B],[gr,B,R,B]];
+    for (const [x1,y1,x2,y2] of segs){
+      for (const off of [-9, 5]) s += `<line x1="${x1}" y1="${y1+off}" x2="${x2}" y2="${y2+off}" stroke="#8b5a2b" stroke-width="7" stroke-linecap="round"/>`;
+      const len = Math.hypot(x2-x1, y2-y1), n = Math.max(1, Math.round(len/52));
+      for (let i=0;i<=n;i++){
+        const px = x1 + (x2-x1)*i/n, py = y1 + (y2-y1)*i/n;
+        s += `<rect x="${px-6}" y="${py-22}" width="12" height="30" rx="3" fill="#6e4520" stroke="#4a2e14" stroke-width="2"/>`;
+      }
+    }
+    // sign
+    s += `<g transform="translate(${p.gate} ${B+30})"><rect x="-70" y="-16" width="140" height="32" rx="8" fill="${p.color}" stroke="#4a2e14" stroke-width="3"/>
+      <text text-anchor="middle" y="7" font-size="19" font-weight="900" fill="#fff" font-family="ui-rounded,system-ui">${p.label}</text></g>`;
+  }
+  g.innerHTML = s;
+}
+
+// ---------- pig art ----------
+const PIG_TINTS = [['#f7b0c0','#e58aa0'],['#f9c2b0','#e79c84'],['#f4a6b8','#d97992'],['#fbc8d2','#e99fb1'],['#e9b49a','#c98a6c'],['#f6d2c2','#dba48c']];
+function isVip(name){ return false; }
+let svgUid = 0;
+const FANCY_COLORS = [
+  {b:'#ffd23f',d:'#e0a800',hl:'#fff3b0',name:'Vàng'},{b:'#b892ff',d:'#7b4fd6',hl:'#e6dbff',name:'Tím'},
+  {b:'#5fe0c0',d:'#21a585',hl:'#c9fff1',name:'Ngọc'},{b:'#5aa9ff',d:'#2a6fd1',hl:'#cfe6ff',name:'Xanh'},
+  {b:'#ff7eb6',d:'#e0408a',hl:'#ffd3e7',name:'Hồng'},{b:'#ff9f45',d:'#e06b10',hl:'#ffe0c2',name:'Cam'},
+  {b:'#e9eef5',d:'#9aa7b8',hl:'#ffffff',name:'Bạc'},{b:'#7be36b',d:'#3fa52f',hl:'#d8ffcf',name:'Lá'},
+  {b:'#1f1b1e',d:'#0a0809',hl:'#5a5458',name:'Đen'},{b:'#e8262f',d:'#a10f17',hl:'#ff8a8f',name:'Đỏ'},
+  {b:'#2b2f6b',d:'#151842',hl:'#6f76c9',name:'Navy'},{b:'#8a5a34',d:'#5c3818',hl:'#d4a47a',name:'Nâu'},
+  {b:'#9d2fd6',d:'#5e1388',hl:'#d99bff',name:'Tím đậm'},{b:'#c9f23a',d:'#86a80f',hl:'#f1ffb8',name:'Chanh'},
+  {b:'#ff4fd8',d:'#c4119e',hl:'#ffb8f1',name:'Hồng neon'},{b:'#1fb6c9',d:'#0d7c8a',hl:'#a9f2fb',name:'Cyan'},
+];
+const HATS = ['crown','tophat','party','bow','flower','cap'], EYES = ['derp','dealwithit','blep','smug','lol','hearts'], NECKS = ['chain','bowtie','scarf'];
+const MEMES = ["Heo đẹp trai nhất xóm 🐷", "Quá xinh, quá heo", "Heo chúa đã lên ngôi", "Đẹp tới mức ụt ịt", "Trúng số nhan sắc 🎰", "Mlem mlem, đẹp xỉu", "Heo này auto đỉnh", "Nhan sắc không đối thủ", "Ụt ịt, tôi là nhất", "Chân ái của chuồng", "Ai dám chê heo?", "Đẹp heo không cần filter", "Nọng xinh, tim loạn nhịp 💖", "Vũ trụ chọn heo", "Hết hồn, đẹp quá", "Heo hoàng gia là đây", "Heo này đẹp vãi chưởng 🐷", "Đẹp trai nhất chuồng", "Heo quốc dân đây rồi", "Nhan sắc lợn lòn xuất sắc", "Mặt tiền chuồng heo 💅", "Trúng số độc đắc nhan sắc", "Heo đẹp, chuồng cũng đẹp", "Ủn ỉn mà sang chảnh", "Đỉnh của chóp heo", "Heo này có cánh 😇", "Đẹp tới mức lùa luôn", "Mông tròn, vibe sang", "Nghe tiếng ủn ỉn mà xỉu", "Ai cho heo đẹp vậy?", "Chân ngắn, nhan sắc dài", "Heo đẹp nhất hệ mặt trời 🌍", "Lỡ đẹp rồi, chiều đi", "Chúa tể ủn ỉn 👑", "Gu thẩm mỹ của chuồng", "Cái đuôi xoắn đỉnh thật", "Heo này là main character", "Đẹp như deadline gần kề", "Lùa heo, trúng idol", "Không chọn không được", "Số hưởng nên heo đẹp", "Đẹp lạnh lùng kiểu heo", "Heo này đi thi hoa hậu", "Heo đẹp có chứng nhận", "Mõm xinh trúng tuyển", "Ủn ỉn là một nghệ thuật", "Chuồng có vị khách VIP", "Tròn trịa là chân ái", "Cú chọn định mệnh 🎯", "Phốt phát vì quá xinh", "Đẹp hơn cả crush bạn", "Heo chúa tái thế", "Thần thái heo hoàng gia", "Nhìn heo là muốn ôm", "Cục thịt quyền lực", "Gen Z cũng phải gục", "Ủn một phát, đổ luôn", "Heo kiêu sa vào chuồng", "Chiếc heo của năm 🏆", "Dáng đi như lên sàn", "Xin phép khen heo xinh", "Heo ơi, bạn là nhất", "Tui thề heo này đẹp", "Heo trúng giải nhan sắc", "Mông to, tương lai sáng", "Ngoan xinh yêu, ủn ủn", "Cả chuồng ghen tị luôn", "Chọn nhầm cũng đẹp", "Heo này viral chắc rồi 🔥", "Đẹp xuất sắc, ủn xuất thần"];
+function randomStyle(){
+  return {c: rnd(FANCY_COLORS.length), hat: HATS[rnd(HATS.length)], eyes: EYES[rnd(EYES.length)], neck: NECKS[rnd(NECKS.length)], rainbow: rnd(5) === 0, meme: nextMeme()};
+}
+let memeDeck = [], lastMeme = '';
+function nextMeme(){
+  memeDeck = memeDeck.filter(m => MEMES.includes(m));
+  if (!memeDeck.length){
+    memeDeck = MEMES.slice();
+    for (let i = memeDeck.length-1; i > 0; i--){ const j = rnd(i+1); [memeDeck[i],memeDeck[j]] = [memeDeck[j],memeDeck[i]]; }
+    if (memeDeck[0] === lastMeme) memeDeck.push(memeDeck.shift());
+  }
+  lastMeme = memeDeck.shift();
+  return lastMeme;
+}
+const VIP_STYLE = {black:true, hat:'crown', eyes:'shades', neck:'chain'};
+function fancySVG(st){
+  const id = 'fg' + (svgUid++);
+  const C = st.black ? {b:'#1d1a1c',d:'#0c0a0b',hl:'#4a4448'} : FANCY_COLORS[st.c];
+  const o = st.black ? '#000' : '#4a3527', g = '#f5c542';
+  const fill = st.rainbow ? `url(#${id}r)` : `url(#${id})`;
+  const hats = {
+    crown:`<g transform="rotate(-8 80 8)"><path d="M66 14 l4 -16 l7 9 l6 -12 l6 12 l7 -9 l2 16 Z" fill="${g}" stroke="#a87412" stroke-width="2" stroke-linejoin="round"/><circle cx="72" cy="2" r="2.2" fill="#e5484d"/><circle cx="83" cy="0" r="2.2" fill="#3fa7e0"/></g>`,
+    tophat:`<g transform="rotate(-10 80 10)"><rect x="64" y="12" width="32" height="5" rx="2" fill="#1a1a1a"/><rect x="69" y="-10" width="22" height="24" rx="2" fill="#1a1a1a"/><rect x="69" y="6" width="22" height="5" fill="#d94f6b"/></g>`,
+    party:`<g transform="rotate(-12 80 10)"><path d="M70 16 L80 -18 L90 16 Z" fill="#5aa9ff" stroke="${o}" stroke-width="2" stroke-linejoin="round"/><path d="M73 6 L87 6 M76 -4 L84 -4" stroke="#ffd23f" stroke-width="3"/><circle cx="80" cy="-19" r="4" fill="#ff7eb6"/></g>`,
+    bow:`<g transform="translate(88 14) rotate(15)"><path d="M0 0 L-12 -8 L-12 8 Z M0 0 L12 -8 L12 8 Z" fill="#ff4f8b" stroke="${o}" stroke-width="2" stroke-linejoin="round"/><circle r="4" fill="#ff8fb5" stroke="${o}" stroke-width="2"/></g>`,
+    cap:`<g transform="rotate(25 80 14)"><path d="M64 16 q16 -22 32 0 Z" fill="#e5484d" stroke="${o}" stroke-width="2"/><path d="M64 16 h-14 q2 -5 14 -4" fill="#e5484d" stroke="${o}" stroke-width="2"/><circle cx="80" cy="3" r="2.5" fill="#fff"/></g>`,
+    flower:`<g transform="translate(88 14)">${[0,72,144,216,288].map(a=>`<ellipse rx="4.5" ry="7" cy="-7" fill="#fff" stroke="${o}" stroke-width="1.5" transform="rotate(${a})"/>`).join('')}<circle r="4" fill="#ffd23f" stroke="${o}" stroke-width="1.5"/></g>`,
+  };
+  const eyes = {
+    derp:`<circle cx="77" cy="30" r="7" fill="#fff" stroke="${o}" stroke-width="2"/><circle cx="74" cy="33" r="3.2" fill="#000"/>
+      <circle cx="89" cy="26" r="4.5" fill="#fff" stroke="${o}" stroke-width="2"/><circle cx="91" cy="24" r="2" fill="#000"/>
+      <path d="M82 52 q6 5 12 0" stroke="${o}" stroke-width="2" fill="#7a1f2b"/><rect x="86" y="51" width="4" height="5" fill="#fff" stroke="${o}" stroke-width="1"/>
+      <path d="M90 56 q1 6 -1 9" stroke="#8fd3ff" stroke-width="2.5" fill="none" stroke-linecap="round"/>`,
+    dealwithit:`<g fill="#000" stroke="#fff" stroke-width=".7"><rect x="66" y="27" width="30" height="3"/><rect x="69" y="30" width="9" height="3"/><rect x="69" y="33" width="9" height="3"/><rect x="84" y="30" width="9" height="3"/><rect x="84" y="33" width="9" height="3"/></g>
+      <g fill="#fff"><rect x="70" y="30" width="3" height="3"/><rect x="85" y="30" width="3" height="3"/></g>
+      <path d="M83 51 q6 3 11 -2" stroke="${o}" stroke-width="2.2" fill="none" stroke-linecap="round"/>`,
+    blep:`<path d="M75 31 q3 -3 6 0" stroke="${o}" stroke-width="2.2" fill="none" stroke-linecap="round"/><path d="M85 29 q3 -3 6 0" stroke="${o}" stroke-width="2.2" fill="none" stroke-linecap="round"/>
+      <path d="M86 50 q4 2 8 0 v6 q-4 6 -8 0Z" fill="#ff5d7a" stroke="${o}" stroke-width="1.8"/><path d="M90 51 v5" stroke="#c4314c" stroke-width="1.2"/>`,
+    smug:`<path d="M73 30 h9" stroke="${o}" stroke-width="2.4" stroke-linecap="round"/><path d="M86 28 h8" stroke="${o}" stroke-width="2.4" stroke-linecap="round"/>
+      <circle cx="79" cy="32" r="2" fill="#000"/><circle cx="91" cy="30" r="2" fill="#000"/>
+      <path d="M73 25 l9 2 M86 24 l8 -1" stroke="${o}" stroke-width="2" stroke-linecap="round"/>
+      <path d="M82 52 q8 2 13 -5" stroke="${o}" stroke-width="2.2" fill="none" stroke-linecap="round"/>`,
+    lol:`<path d="M73 31 l4 -3 l4 3" stroke="${o}" stroke-width="2.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/><path d="M85 29 l4 -3 l4 3" stroke="${o}" stroke-width="2.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M72 34 q-3 8 -1 12" stroke="#5ec8ff" stroke-width="3" fill="none" stroke-linecap="round"/><path d="M95 32 q4 7 3 11" stroke="#5ec8ff" stroke-width="3" fill="none" stroke-linecap="round"/>
+      <path d="M80 49 q8 12 16 0 Z" fill="#7a1f2b" stroke="${o}" stroke-width="2"/><path d="M82 50 h12" stroke="#fff" stroke-width="2.5"/>`,
+    shades:`<path d="M70 28 h22 l-1 5 q-2 5 -7 4 l-3 -5 h-1 l-2 5 q-6 1 -8 -4Z" fill="#0a0a0a" stroke="${g}" stroke-width="1.6" stroke-linejoin="round"/><path d="M74 30 l3 0" stroke="#fff" stroke-width="1.4" stroke-linecap="round" opacity=".8"/>`,
+    hearts:`<g fill="#ff3d6e" stroke="${o}" stroke-width="1.3"><path d="M76 36 l-5 -5 a3 3 0 0 1 5 -3 a3 3 0 0 1 5 3 Z"/><path d="M89 36 l-5 -5 a3 3 0 0 1 5 -3 a3 3 0 0 1 5 3 Z"/></g><path d="M81 31 h3" stroke="${o}" stroke-width="1.5"/>`,
+    star:`<circle cx="83" cy="31" r="3" fill="#2b1d14"/><circle cx="84" cy="30" r="1" fill="#fff"/><circle cx="83" cy="31" r="6" fill="none" stroke="${g}" stroke-width="1.8"/><path d="M88 35 l6 10" stroke="${g}" stroke-width="1.2"/>`,
+    none:`<circle cx="83" cy="31" r="3.4" fill="#2b1d14"/><circle cx="84.2" cy="29.8" r="1.2" fill="#fff"/><path d="M79 26 q4 -3 8 0" stroke="#2b1d14" stroke-width="1.5" fill="none" stroke-linecap="round"/>`,
+  };
+  const necks = {
+    chain:`<path d="M64 52 q16 12 32 0" stroke="${g}" stroke-width="3" fill="none" stroke-linecap="round"/><circle cx="80" cy="58.5" r="4" fill="${g}" stroke="#a87412" stroke-width="1.5"/>`,
+    bowtie:`<g transform="translate(80 55)"><path d="M0 0 L-10 -6 L-10 6 Z M0 0 L10 -6 L10 6 Z" fill="#d94f6b" stroke="${o}" stroke-width="1.8" stroke-linejoin="round"/><circle r="3" fill="#ff8fa6" stroke="${o}" stroke-width="1.5"/></g>`,
+    scarf:`<path d="M63 50 q17 10 34 0 l0 5 q-17 10 -34 0Z" fill="#e5484d" stroke="${o}" stroke-width="1.6"/><path d="M68 56 l-3 14 l7 -1 l1 -11" fill="#e5484d" stroke="${o}" stroke-width="1.6" stroke-linejoin="round"/>`,
+  };
+  return `<svg viewBox="0 -26 110 112" aria-hidden="true">
+  <defs><radialGradient id="${id}" cx=".35" cy=".3" r=".8"><stop offset="0" stop-color="${C.hl}"/><stop offset=".55" stop-color="${C.b}"/><stop offset="1" stop-color="${C.d}"/></radialGradient>
+  <linearGradient id="${id}r" x1="0" x2="1"><stop offset="0" stop-color="#ff7eb6"/><stop offset=".25" stop-color="#ffd23f"/><stop offset=".5" stop-color="#7be36b"/><stop offset=".75" stop-color="#5aa9ff"/><stop offset="1" stop-color="#b892ff"/></linearGradient></defs>
+  <g fill="${g}"><path d="M8 4 l2 5 l5 2 l-5 2 l-2 5 l-2 -5 l-5 -2 l5 -2Z"/><path d="M30 -14 l1.5 3.5 l3.5 1.5 l-3.5 1.5 l-1.5 3.5 l-1.5 -3.5 l-3.5 -1.5 l3.5 -1.5Z"/><path d="M104 60 l1.5 3.5 l3.5 1.5 l-3.5 1.5 l-1.5 3.5 l-1.5 -3.5 l-3.5 -1.5 l3.5 -1.5Z"/></g>
+  <path d="M14 40 c-10 -2 -10 -12 -2 -12 c6 0 4 8 -2 6" stroke="${C.d}" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+  <rect x="22" y="56" width="10" height="22" rx="4" fill="${C.d}"/><rect x="58" y="56" width="10" height="22" rx="4" fill="${C.d}"/>
+  <ellipse cx="46" cy="46" rx="34" ry="24" fill="${fill}" stroke="${o}" stroke-width="2.5"/>
+  <path d="M24 36 q10 -10 26 -10" stroke="${C.hl}" stroke-width="2.5" fill="none" stroke-linecap="round" opacity=".7"/>
+  <rect x="32" y="58" width="10" height="22" rx="4" fill="${C.b}" stroke="${o}" stroke-width="2"/><rect x="66" y="58" width="10" height="22" rx="4" fill="${C.b}" stroke="${o}" stroke-width="2"/>
+  <rect x="32" y="75" width="10" height="5" rx="2" fill="${g}"/><rect x="66" y="75" width="10" height="5" rx="2" fill="${g}"/>
+  <path d="M68 22 l4 -16 l12 12 Z" fill="${C.d}" stroke="${o}" stroke-width="2.5" stroke-linejoin="round"/>
+  <circle cx="80" cy="36" r="19" fill="url(#${id})" stroke="${o}" stroke-width="2.5"/>
+  <path d="M86 20 l10 -12 l4 16 Z" fill="${C.d}" stroke="${o}" stroke-width="2.5" stroke-linejoin="round"/>
+  ${hats[st.hat]}
+  <ellipse cx="97" cy="41" rx="12" ry="9.5" fill="${C.d}" stroke="${o}" stroke-width="2.5"/>
+  <ellipse cx="93" cy="41" rx="2.8" ry="4" fill="#000"/><ellipse cx="101" cy="41" rx="2.8" ry="4" fill="#000"/>
+  ${st.black ? '' : `<ellipse cx="74" cy="44" rx="4.5" ry="2.6" fill="#ff8fa6" opacity=".7"/>`}
+  ${necks[st.neck]}
+  ${eyes[st.eyes]}
+  </svg>`;
+}
+function vipSVG(){ return fancySVG(VIP_STYLE); }
+function artFor(p){ return isVip(p.name) ? vipSVG() : p.fancy ? fancySVG(p.fancy) : pigSVG(p.tint); }
+function renderArt(p){
+  const el = ensureEl(p);
+  el.classList.toggle('vip', isVip(p.name));
+  el.classList.toggle('fancy', !!p.fancy && !isVip(p.name));
+  el.querySelector('.art').innerHTML = artFor(p);
+  let m = el.querySelector('.meme');
+  if (p.fancy){ if (!m){ m = document.createElement('div'); m.className = 'meme'; el.prepend(m); } m.textContent = p.fancy.meme || MEMES[0]; }
+  else if (m) m.remove();
+}
+function pigSVG(t){
+  const [b,d] = PIG_TINTS[t % PIG_TINTS.length], spot = t % 3 === 0;
+  return `<svg viewBox="0 0 110 86" aria-hidden="true">
+  <path d="M14 40 c-10 -2 -10 -12 -2 -12 c6 0 4 8 -2 6" stroke="${d}" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+  <rect x="22" y="56" width="10" height="22" rx="4" fill="${d}"/><rect x="58" y="56" width="10" height="22" rx="4" fill="${d}"/>
+  <ellipse cx="46" cy="46" rx="34" ry="24" fill="${b}" stroke="#4a3527" stroke-width="2.5"/>
+  ${spot?`<ellipse cx="38" cy="38" rx="9" ry="6" fill="${d}" opacity=".7"/>`:''}
+  <rect x="32" y="58" width="10" height="22" rx="4" fill="${b}" stroke="#4a3527" stroke-width="2"/><rect x="66" y="58" width="10" height="22" rx="4" fill="${b}" stroke="#4a3527" stroke-width="2"/>
+  <rect x="32" y="75" width="10" height="5" rx="2" fill="#4a3527"/><rect x="66" y="75" width="10" height="5" rx="2" fill="#4a3527"/>
+  <path d="M68 22 l4 -16 l12 12 Z" fill="${d}" stroke="#4a3527" stroke-width="2.5" stroke-linejoin="round"/>
+  <circle cx="80" cy="36" r="19" fill="${b}" stroke="#4a3527" stroke-width="2.5"/>
+  <path d="M86 20 l10 -12 l4 16 Z" fill="${d}" stroke="#4a3527" stroke-width="2.5" stroke-linejoin="round"/>
+  <ellipse cx="96" cy="41" rx="10" ry="8" fill="${d}" stroke="#4a3527" stroke-width="2.5"/>
+  <ellipse cx="93" cy="41" rx="1.8" ry="2.6" fill="#4a3527"/><ellipse cx="99" cy="41" rx="1.8" ry="2.6" fill="#4a3527"/>
+  <circle cx="83" cy="31" r="3" fill="#2b1d14"/><circle cx="84" cy="30" r="1" fill="#fff"/>
+  <ellipse cx="76" cy="44" rx="4.5" ry="2.6" fill="#ff8fa6" opacity=".7"/>
+  </svg>`;
+}
+
+// ---------- state ----------
+const KEY = 'pigpen.v1';
+let uid = 1;
+let pigs = [];       // {id,name,tint,pen:null|0|1, x,y, el}
+let results = [];    // {name,pen}
+let busy = false, soundOn = true, mode = 'one';
+let lastWinner = null;
+let fancyHist = [];
+const DEFAULT = ['An','Bình','Châu','Dũng','Hà','Khoa','Linh','Minh'];
+
+const $ = id => document.getElementById(id);
+const ta = $('entries'), layer = $('pigLayer');
+
+function save(){
+  localStorage.setItem(KEY, JSON.stringify({
+    pigs: pigs.map(p => ({name:p.name, tint:p.tint, pen:p.pen, fancy:p.fancy || null})), results, soundOn, mode, fancyHist, memeDeck, lastMeme
+  }));
+}
+function load(){
+  try{
+    const s = JSON.parse(localStorage.getItem(KEY));
+    if (s && Array.isArray(s.pigs)){
+      pigs = s.pigs.map(p => ({id:uid++, name:p.name, tint:p.tint, pen:p.pen ?? null, fancy:p.fancy || null}));
+      results = s.results || []; soundOn = s.soundOn !== false; mode = s.mode === 'all' ? 'all' : 'one'; fancyHist = Array.isArray(s.fancyHist) ? s.fancyHist : []; memeDeck = Array.isArray(s.memeDeck) ? s.memeDeck : []; lastMeme = s.lastMeme || ''; return;
+    }
+  }catch(e){}
+  pigs = DEFAULT.map((n,i) => ({id:uid++, name:n, tint:i, pen:null}));
+}
+
+// sync textarea -> pigs (keep existing pig objects by name)
+function syncFromText(){
+  const names = ta.value.split('\n').map(s => s.trim()).filter(Boolean);
+  const pool = pigs.slice(), next = [];
+  for (const n of names){
+    const i = pool.findIndex(p => p.name === n);
+    if (i >= 0){ next.push(pool[i]); pool.splice(i,1); }
+    else next.push({id:uid++, name:n, tint:rnd(PIG_TINTS.length), pen:null, fresh:true});
+  }
+  for (const p of pool) p.el && p.el.remove();
+  pigs = next; layout(); save();
+}
+function syncToText(){ ta.value = pigs.map(p => p.name).join('\n'); }
+
+// ---------- layout ----------
+function gridSlots(n, box, maxSize){
+  // find biggest pig size that fits n in box
+  let s = maxSize;
+  for (; s > 26; s -= 2){
+    const cw = s*1.18, rh = s*0.78 + s*0.3 + 8;
+    const cols = Math.max(1, Math.floor(box.w / cw)), rows = Math.floor(box.h / rh);
+    if (cols*rows >= n) break;
+  }
+  const cw = s*1.18, rh = s*0.78 + s*0.3 + 8;
+  const cols = Math.max(1, Math.min(n, Math.floor(box.w / cw)));
+  const rows = Math.ceil(n/cols), out = [];
+  const totalH = rows*rh, y0 = box.y + Math.max(0,(box.h - totalH)/2);
+  for (let i=0;i<n;i++){
+    const r = Math.floor(i/cols), inRow = Math.min(cols, n - r*cols), c = i % cols;
+    const rowW = inRow*cw, x0 = box.x + (box.w - rowW)/2;
+    out.push({x: x0 + cw*(c+.5) + (r%2? cw*.12 : 0), y: y0 + rh*(r+1) - 8 - s*.3, s});
+  }
+  return out;
+}
+function penBox(i){ const p = PENS[i]; return {x:p.x+30, y:p.y+62, w:p.w-60, h:p.h-62-14}; }
+
+function targetFor(){
+  const outside = pigs.filter(p => p.pen === null);
+  const map = new Map();
+  gridSlots(outside.length, YARD, 92).forEach((sl,i) => map.set(outside[i].id, sl));
+  [0,1].forEach(k => {
+    const inside = pigs.filter(p => p.pen === k);
+    gridSlots(inside.length, penBox(k), 80).forEach((sl,i) => map.set(inside[i].id, sl));
+  });
+  return map;
+}
+
+function ensureEl(p){
+  if (p.el) return p.el;
+  const el = document.createElement('div');
+  el.className = 'pig';
+  el.className = 'pig' + (isVip(p.name) ? ' vip' : p.fancy ? ' fancy' : '');
+  el.innerHTML = `${p.fancy ? `<div class="meme">${(p.fancy.meme||MEMES[0]).replace(/</g,'&lt;')}</div>` : ''}<div class="art">${artFor(p)}</div><div class="tag"></div>`;
+  el.querySelector('.tag').textContent = p.name;
+  el.title = p.name;
+  layer.appendChild(el); p.el = el;
+  return el;
+}
+function place(p, x, y, s, dur=0){
+  const el = ensureEl(p);
+  el.style.transitionDuration = dur + 'ms';
+  if (s){
+    el.style.width = (s/10) + '%';
+    el.querySelector('.tag').style.fontSize = Math.max(1.05, s*0.0165) + 'cqw';
+  }
+  if (p.x !== undefined && Math.abs(x - p.x) > 2) el.classList.toggle('flip', x < p.x);
+  el.style.left = (x/10) + '%';
+  el.style.top = (y/6.4) + '%';
+  el.style.zIndex = Math.round(y);
+  p.x = x; p.y = y; if (s) p.s = s;
+}
+
+function layout(animate=true){
+  const map = targetFor();
+  for (const p of pigs){
+    const t = map.get(p.id); if (!t) continue;
+    const first = !p.el;
+    place(p, t.x, t.y, t.s, first || !animate ? 0 : 450);
+    if (first || p.fresh){ p.el.classList.remove('pop'); void p.el.offsetWidth; p.el.classList.add('pop'); p.fresh = false; }
+  }
+  updateUI();
+}
+
+function updateUI(){
+  const outside = pigs.filter(p => p.pen === null).length;
+  $('nEntries').textContent = pigs.length;
+  $('nResults').textContent = results.length;
+  $('c1').textContent = `Chuồng 1: ${inPen(0)}/${cap()}`;
+  $('c2').textContent = `Chuồng 2: ${inPen(1)}/${cap()}`;
+  $('resetPens2').disabled = busy || !pigs.some(p => p.pen !== null);
+  $('empty').style.display = pigs.length ? 'none' : '';
+  $('goBtn').disabled = busy || outside === 0;
+  $('hint').textContent = !pigs.length ? 'Thêm tên trước đã' : outside === 0 ? 'Đã chia xong — bấm “Thả heo ra” để chia lại' : 'hoặc bấm Ctrl + Enter';
+  $('soundBtn').textContent = soundOn ? '🔊 Âm thanh' : '🔇 Tắt tiếng';
+  const ol = $('results'); ol.innerHTML = '';
+  results.forEach((r,i) => {
+    const li = document.createElement('li');
+    li.innerHTML = `<span class="i">${results.length - i}</span><span class="nm"></span><span class="b" style="background:${PENS[r.pen].color}">Chuồng ${r.pen+1}</span>`;
+    li.querySelector('.nm').textContent = r.name;
+    ol.appendChild(li);
+  });
+  $('resEmpty').style.display = results.length ? 'none' : '';
+}
+
+// ---------- sound ----------
+let ac;
+function tone(f1, f2, dur, type='square', vol=.06){
+  if (!soundOn) return;
+  ac = ac || new (window.AudioContext || window.webkitAudioContext)();
+  const o = ac.createOscillator(), g = ac.createGain(), t = ac.currentTime;
+  o.type = type; o.frequency.setValueAtTime(f1, t); o.frequency.exponentialRampToValueAtTime(f2, t+dur);
+  g.gain.setValueAtTime(vol, t); g.gain.exponentialRampToValueAtTime(.0001, t+dur);
+  o.connect(g).connect(ac.destination); o.start(t); o.stop(t+dur);
+}
+const tick = () => { if (music.paused) tone(900, 700, .05, 'square', .04); };
+const MUSIC_START = 7.75; // bỏ nhạc dạo, vào thẳng giai điệu chính
+const music = new Audio('xoso.mp3'); music.preload = 'auto';
+music.addEventListener('ended', () => { music.currentTime = MUSIC_START; music.play().catch(()=>{}); });
+let fadeT;
+function musicStart(){ if (!soundOn) return; clearInterval(fadeT); music.volume = .8; music.currentTime = MUSIC_START; music.play().catch(()=>{}); }
+function musicStop(){ clearInterval(fadeT); fadeT = setInterval(() => { music.volume = Math.max(0, music.volume - .05); if (music.volume <= 0){ clearInterval(fadeT); music.pause(); } }, 80); }
+function oink(){ tone(320,180,.16,'sawtooth',.09); setTimeout(()=>tone(300,160,.2,'sawtooth',.09),170); }
+function fanfare(){ [523,659,784,1047].forEach((f,i)=>setTimeout(()=>tone(f,f,.18,'triangle',.08), i*110)); }
+
+// ---------- run ----------
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+async function walk(p, x, y, speed=0.42){ // units per ms
+  const d = Math.hypot(x - p.x, y - p.y), dur = Math.max(120, d / speed);
+  place(p, x, y, null, dur); await sleep(dur);
+}
+
+const cap = () => Math.ceil(pigs.length / 2);
+const inPen = k => pigs.filter(p => p.pen === k).length;
+
+async function walkInto(p, pen, sp=1){
+  const P = PENS[pen], gateY = P.y + P.h;
+  p.pen = pen;
+  p.el.classList.add('walking');
+  await walk(p, P.gate, Math.max(gateY + 70, Math.min(p.y, 400)), .42*sp);
+  await walk(p, P.gate, gateY + 40, .42*sp);
+  await walk(p, P.gate, gateY - 40, .3*sp);
+  const t = targetFor().get(p.id);
+  await walk(p, t.x, t.y, .3*sp);
+  p.el.classList.remove('walking');
+  layout(true);
+}
+
+// pick 1 random pig + random pen that still has room
+async function pickOne(fast){
+  const cand = pigs.filter(p => p.pen === null);
+  const open = [0,1].filter(k => inPen(k) < cap());
+  const winner = cand[rnd(cand.length)], pen = open[rnd(open.length)];
+  const banner = $('banner');
+  const steps = fast ? 8 + rnd(4) : 22 + rnd(8);
+  let cur = rnd(cand.length);
+  for (let i = 0; i < steps; i++){
+    if (cand.length > 1){ let n; do n = rnd(cand.length); while (n === cur); cur = n; }
+    const p = i === steps-1 ? winner : cand[cur];
+    cand.forEach(c => c.el.classList.remove('hot'));
+    void p.el.offsetWidth; p.el.classList.add('hot');
+    banner.textContent = p.name; tick();
+    await sleep(fast ? 45 + Math.pow(i/steps,2)*160 : 50 + Math.pow(i/steps, 2.4) * 380);
+  }
+  await sleep(fast ? 120 : 350);
+  cand.forEach(c => c.el.classList.remove('hot'));
+  winner.el.classList.add('winner'); oink();
+  banner.textContent = `${winner.name} → Chuồng ${pen+1}!`;
+  await walkInto(winner, pen, fast ? 1.8 : 1);
+  results.unshift({name: winner.name, pen});
+  winner.el.classList.remove('winner');
+  banner.textContent = '';
+  save(); updateUI();
+  return {winner, pen};
+}
+
+// one pen full → the rest walk into the other pen
+async function fillRest(){
+  const rest = pigs.filter(p => p.pen === null);
+  if (!rest.length) return null;
+  const full = [0,1].find(k => inPen(k) >= cap());
+  if (full === undefined) return null;
+  const other = 1 - full;
+  $('banner').textContent = `Chuồng ${full+1} đủ ${cap()} con → còn lại vô Chuồng ${other+1}`;
+  await sleep(900);
+  await Promise.all(rest.map((p,i) => sleep(i*180).then(() => {
+    results.unshift({name: p.name, pen: other});
+    return walkInto(p, other, 1.6);
+  })));
+  $('banner').textContent = '';
+  layout(true); save(); updateUI();
+  return {rest, other};
+}
+
+async function go(){
+  if (busy) return;
+  if (!pigs.some(p => p.pen === null)) return;
+  busy = true; updateUI(); ta.disabled = true;
+  results = []; updateUI();
+  await pickFancy();
+  musicStart();
+  while (pigs.some(p => p.pen === null) && [0,1].every(k => inPen(k) < cap())) await pickOne(true);
+  await fillRest();
+  await sleep(600); musicStop();
+  fanfare();
+  showSummary('🎉 Đã chia đều 2 chuồng!');
+  busy = false; ta.disabled = false; updateUI();
+}
+
+// mỗi lượt: chọn ngẫu nhiên 1 heo thường thành heo đẹp (màu + kiểu ngẫu nhiên)
+// số heo đẹp mỗi lượt: 1 con (84%), 2 con (12%), 3 con (4%)
+function fancyCount(){ const r = rnd(100); return r < 4 ? 3 : r < 16 ? 2 : 1; }
+function pickFancyPig(all){
+  // không trùng trong 10 lượt: loại 9 tên đã làm heo đẹp gần nhất
+  const recent = fancyHist.slice(-9);
+  let pool = all.filter(p => !recent.includes(p.name));
+  if (!pool.length){ // ít heo hơn 10: chọn con lâu rồi chưa được làm heo đẹp
+    const age = n => fancyHist.lastIndexOf(n);
+    const min = Math.min(...all.map(p => age(p.name)));
+    pool = all.filter(p => age(p.name) === min);
+  }
+  return pool[rnd(pool.length)];
+}
+async function pickFancy(){
+  pigs.filter(p => p.fancy).forEach(p => { p.fancy = null; renderArt(p); });
+  let all = pigs.filter(p => p.pen === null && !isVip(p.name));
+  if (!all.length) return;
+  const n = Math.min(fancyCount(), all.length), chosen = [];
+  for (let i = 0; i < n; i++){
+    const p = pickFancyPig(all);
+    all = all.filter(x => x !== p); chosen.push(p);
+    p.fancy = randomStyle(); renderArt(p);
+    p.el.classList.remove('pop'); void p.el.offsetWidth; p.el.classList.add('pop');
+    $('banner').textContent = n > 1 ? `✨ ${n} HEO ĐẸP! ${chosen.map(x => x.name).join(', ')}` : `✨ ${p.name}: ${p.fancy.meme}`;
+    if (n > 1) oink();
+    await sleep(n > 1 ? 700 : 0);
+  }
+  fancyHist.push(...chosen.map(p => p.name)); fancyHist = fancyHist.slice(-50);
+  save(); await sleep(1300); $('banner').textContent = '';
+}
+
+function showSummary(title){
+  lastWinner = null;
+  $('dHead').style.background = 'var(--accent)';
+  $('dHead').textContent = title;
+  $('dPig').innerHTML = ''; $('dName').textContent = ''; $('dWhere').textContent = '';
+  const box = $('dSum'); box.innerHTML = ''; box.style.display = '';
+  [0,1].forEach(k => {
+    const col = document.createElement('div'); col.className = 'col';
+    col.innerHTML = `<div class="h" style="background:${PENS[k].color}">Chuồng ${k+1} · ${inPen(k)} con</div><ul></ul>`;
+    pigs.filter(p => p.pen === k).forEach(p => { const li = document.createElement('li'); li.textContent = p.name; col.querySelector('ul').appendChild(li); });
+    box.appendChild(col);
+  });
+  $('dRemove').style.display = 'none';
+  $('dlg').showModal();
+}
+
+function showDialog(p, pen){
+  lastWinner = p;
+  $('dHead').style.background = PENS[pen].color;
+  $('dHead').textContent = `🎉 Vô Chuồng ${pen+1}!`;
+  $('dPig').innerHTML = artFor(p);
+  $('dName').textContent = p.name;
+  $('dWhere').textContent = (p.fancy ? p.fancy.meme + ' · ' : '') + `đã được lùa vào Chuồng ${pen+1}`;
+  $('dSum').style.display = 'none'; $('dRemove').style.display = '';
+  $('dlg').showModal();
+}
+$('dClose').onclick = () => $('dlg').close();
+$('dRemove').onclick = () => {
+  if (lastWinner){
+    lastWinner.el && lastWinner.el.remove();
+    pigs = pigs.filter(p => p !== lastWinner);
+    syncToText(); layout(); save();
+  }
+  $('dlg').close();
+};
+
+// ---------- wiring ----------
+$('goBtn').onclick = go;
+document.addEventListener('keydown', e => { if ((e.ctrlKey || e.metaKey) && e.key === 'Enter'){ e.preventDefault(); go(); } });
+let deb; ta.addEventListener('input', () => { clearTimeout(deb); deb = setTimeout(syncFromText, 250); });
+$('shuffleBtn').onclick = () => { for (let i=pigs.length-1;i>0;i--){ const j=rnd(i+1); [pigs[i],pigs[j]]=[pigs[j],pigs[i]]; } syncToText(); layout(); save(); };
+$('sortBtn').onclick = () => { pigs.sort((a,b)=>a.name.localeCompare(b.name,'vi')); syncToText(); layout(); save(); };
+$('clearBtn').onclick = () => { if (!pigs.length || confirm('Xoá hết tên?')){ pigs.forEach(p=>p.el&&p.el.remove()); pigs=[]; syncToText(); layout(); save(); } };
+$('resetPens2').onclick = () => { if (busy) return; pigs.forEach(p => { p.pen = null; if (p.fancy){ p.fancy = null; renderArt(p); } }); layout(); save(); };
+$('sortResBtn').onclick = () => { results.sort((a,b)=>a.name.localeCompare(b.name,'vi')); updateUI(); save(); };
+$('clearResBtn').onclick = () => { results = []; updateUI(); save(); };
+$('soundBtn').onclick = () => { soundOn = !soundOn; if (!soundOn){ clearInterval(fadeT); music.pause(); } else if (busy) musicStart(); updateUI(); save(); };
+document.querySelectorAll('.tab').forEach(t => t.onclick = () => {
+  document.querySelectorAll('.tab').forEach(x => x.setAttribute('aria-selected', x === t));
+  document.querySelectorAll('.pane').forEach(x => x.classList.toggle('on', x.id === 'pane-' + t.dataset.tab));
+});
+
+drawPens(); load(); syncToText(); layout(false);
+window.__pig = { fancyCount, nextMeme, MEMES, FANCY_COLORS, pickFancy, get results(){ return results; }, get fancyHist(){ return fancyHist; }, music, go, setMode(m){ mode = m; updateUI(); }, get pigs(){ return pigs; }, get busy(){ return busy; } };
+})();
+</script>
+</body>
+</html>
